@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0-rc",
+  "productName": "tsto-toolbox",
+  "version": "0.1.0",
+  "identifier": "com.tsto-toolbox.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "trunk serve",
+    "beforeBuildCommand": "trunk build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "TSTO Toolbox",
+        "width": 800,
+        "height": 600,
+        "resizable": false,
+        "fullscreen": false,
+	"decorations": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
