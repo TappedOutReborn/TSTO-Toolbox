@@ -1,6 +1,3 @@
-.logo.yew:hover {
-  filter: drop-shadow(0 0 2em #20a88a);
-}
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -15,44 +12,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .container {
-  margin: 0;
-  padding-top: 10vh;
+  margin: 3vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
+  align-items: stretch;
   text-align: center;
 }
 
@@ -82,15 +56,6 @@ button:active {
   background-color: #e8e8e8;
 }
 
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     color: #f6f6f6;
@@ -114,7 +79,7 @@ button {
 .titlebar {
   height: 30px;
   background: #111110;
-  color: #f6f6f6
+  color: #f6f6f6;
   user-select: none;
   display: flex;
   justify-content: flex-end;
@@ -144,5 +109,43 @@ button {
   height: 38px;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  align-items: stretch;
+  justify-items: stretch;
+  box-sizing: border-box;
+}
+
+.tile {
+  aspect-ratio: 1/1;
+  display: flex;
+  padding: 5%;
+  background-color: #0098ED;
+  border: solid;
+  border-color: #62B3EE;
+  border-width: 0.25rem;
+  border-radius: 5%;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.inner-circle img {
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.inner-circle {
+  background: #115587;
+  border-radius: 50%;
+  width: 95%;
+  height: 95%;
 }
 

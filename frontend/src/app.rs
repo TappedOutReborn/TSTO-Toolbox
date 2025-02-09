@@ -1,4 +1,3 @@
-use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
@@ -9,9 +8,33 @@ extern "C" {
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
-#[derive(Serialize, Deserialize)]
-struct GreetArgs<'a> {
-    name: &'a str,
+#[derive(Clone, PartialEq)]
+struct Tile {
+    id: String,
+    image_path: String,
+}
+
+#[derive(Properties, PartialEq)]
+struct TileListProps {
+    tiles: Vec<Tile>,
+    on_click: Callback<Tile>,
+}
+
+#[function_component(TileList)]
+fn tile_list(TileListProps { tiles, on_click }: &TileListProps) -> Html {
+    tiles.iter().map(|tile| { 
+        let on_tile_select = {
+            let on_click = on_click.clone();
+            let tile = tile.clone();
+            Callback::from(move |_| {
+                on_click.emit(tile.clone())
+            })
+        };
+
+        html! {
+            <div class="tile" onclick={on_tile_select}><div class="inner-circle"><img src={tile.image_path.clone()} /></div></div>
+        }
+    }).collect()
 }
 
 #[function_component(TitleBar)]
@@ -36,102 +59,103 @@ fn title_bar() -> Html {
 
     html! {
         <div
-    class="titlebar"
-    style="display: flex; align-items: center; cursor: default; z-index: 1000; position: relative;"
-    onclick={start_drag}
-    data-tauri-drag-region={true.to_string()}>
+            class="titlebar"
+            style="display: flex; align-items: center; cursor: default; z-index: 1000; position: relative;"
+            onclick={start_drag}
+            data-tauri-drag-region={true.to_string()}>
 
-    <div class="titlebar-left" style="position: absolute; left: 0px;">
-        <img
-            src="public/icon.png"
-            alt="Icon"
-            style="width: 38px; height: 38px;"/>
-    </div>
+            <div class="titlebar-left" style="position: absolute; left: 0px;">
+                <img
+                    src="public/taskbar/icon.png"
+                    alt="Icon"
+                    style="width: 38px; height: 38px;"/>
+            </div>
 
-    <div style="display: flex; margin-left: auto;">
-        <div class="titlebar-button" id="titlebar-minimize" onclick={minimize_window}>
-            <img
-                src="public/minimize.svg"
-                alt="minimize"
-                style="width: 20px; height: 20px;"/>
+            <div style="display: flex; margin-left: auto;">
+                <div class="titlebar-button" id="titlebar-minimize" onclick={minimize_window}>
+                    <img
+                        src="public/taskbar/minimize.svg"
+                        alt="minimize"
+                        style="width: 20px; height: 20px;"/>
+                </div>
+                <div class="titlebar-button" id="titlebar-close" onclick={close_window}>
+                    <img
+                        src="public/taskbar/close.svg"
+                        alt="close"
+                        style="width: 20px; height: 20px;"/>
+                </div>
+            </div>
         </div>
-        <div class="titlebar-button" id="titlebar-close" onclick={close_window}>
-            <img
-                src="public/close.svg"
-                alt="close"
-                style="width: 20px; height: 20px;"/>
-        </div>
-    </div>
-</div>
 
     }
 }
 
 #[function_component(App)]
 pub fn app() -> Html {
-    let greet_input_ref = use_node_ref();
+    let tiles = vec![
+        Tile {
+            id: "yearbook".to_string(),
+            image_path: "public/tiles/yearbook.png".to_string(),
+        },
+        Tile {
+            id: "shattered_dreams".to_string(),
+            image_path: "public/tiles/shattered_dreams.png".to_string(),
+        },
+        Tile {
+            id: "currency_presents".to_string(),
+            image_path: "public/tiles/currency_presents.png".to_string(),
+        },
+        Tile {
+            id: "yearbook".to_string(),
+            image_path: "public/tiles/yearbook.png".to_string(),
+        },
+        Tile {
+            id: "shattered_dreams".to_string(),
+            image_path: "public/tiles/shattered_dreams.png".to_string(),
+        },
+        Tile {
+            id: "currency_presents".to_string(),
+            image_path: "public/tiles/currency_presents.png".to_string(),
+        },
+        Tile {
+            id: "yearbook".to_string(),
+            image_path: "public/tiles/yearbook.png".to_string(),
+        },
+        Tile {
+            id: "shattered_dreams".to_string(),
+            image_path: "public/tiles/shattered_dreams.png".to_string(),
+        },
+        Tile {
+            id: "currency_presents".to_string(),
+            image_path: "public/tiles/currency_presents.png".to_string(),
+        },
+        Tile {
+            id: "yearbook".to_string(),
+            image_path: "public/tiles/yearbook.png".to_string(),
+        },
+        Tile {
+            id: "shattered_dreams".to_string(),
+            image_path: "public/tiles/shattered_dreams.png".to_string(),
+        },
+        Tile {
+            id: "currency_presents".to_string(),
+            image_path: "public/tiles/currency_presents.png".to_string(),
+        },
+    ];
 
-    let name = use_state(|| String::new());
-
-    let greet_msg = use_state(|| String::new());
-    {
-        let greet_msg = greet_msg.clone();
-        let name = name.clone();
-        let name2 = name.clone();
-        use_effect_with(
-            name2,
-            move |_| {
-                spawn_local(async move {
-                    if name.is_empty() {
-                        return;
-                    }
-
-                    let args = serde_wasm_bindgen::to_value(&GreetArgs { name: &*name }).unwrap();
-                    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-                    let new_msg = invoke("greet", args).await.as_string().unwrap();
-                    greet_msg.set(new_msg);
-                });
-
-                || {}
-            },
-        );
-    }
-
-    let greet = {
-        let name = name.clone();
-        let greet_input_ref = greet_input_ref.clone();
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            name.set(
-                greet_input_ref
-                    .cast::<web_sys::HtmlInputElement>()
-                    .unwrap()
-                    .value(),
-            );
+    let on_tile_select = {
+        Callback::from(move |tile: Tile| {
+            web_sys::console::log_1(&format!("Tile clicked: {}", tile.id).into());
         })
     };
-
+ 
     html! {
         <>
             <TitleBar />
             <main class="container">
-                <h1>{"Welcome to Tauri + Yew"}</h1>
-
-                <div class="row">
-                    <a href="https://tauri.app" target="_blank">
-                        <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
-                    </a>
-                    <a href="https://yew.rs" target="_blank">
-                        <img src="public/yew.png" class="logo yew" alt="Yew logo"/>
-                    </a>
+                <div class="grid">
+                    <TileList tiles={tiles} on_click={on_tile_select} />
                 </div>
-                <p>{"Click on the Tauri and Yew logos to learn more."}</p>
-
-                <form class="row" onsubmit={greet}>
-                    <input id="greet-input" ref={greet_input_ref} placeholder="Enter a name..." />
-                    <button type="submit">{"Greet"}</button>
-                </form>
-                <p>{ &*greet_msg }</p>
             </main>
         </>
     }

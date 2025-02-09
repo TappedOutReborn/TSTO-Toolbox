@@ -15,7 +15,7 @@
         "title": "TSTO Toolbox",
         "width": 800,
         "height": 600,
-        "resizable": false,
+        "resizable": true,
         "fullscreen": false,
 	"decorations": false
       }
