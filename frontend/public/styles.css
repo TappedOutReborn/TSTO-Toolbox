@@ -132,7 +132,10 @@ button:active {
 }
 
 .inner-circle img {
+  height: 75%;
+  object-fit: cover;
   object-position: center;
+  box-sizing: border-box;
 }
 
 .inner-circle {
