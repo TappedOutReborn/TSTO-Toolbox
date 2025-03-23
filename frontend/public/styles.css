@@ -22,6 +22,12 @@
   user-select: none;
 }
 
+p {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  user-select: auto;
+}
+
 .container {
   margin: 3vw;
   display: flex;
@@ -144,5 +150,34 @@ button:active {
   aspect-ratio: 1/1;
   width: 100%;
   align-content: center;
+}
+
+.backbutton {
+  position: absolute;
+
+  display: block;
+  
+  left: 50%;
+  transform: translate(-50%, -50%);
+  bottom: 1vw;
+
+  width: 175px;
+  height: 50px;
+	
+  color: #fff;
+  background-color: #015E9D;
+
+  font-weight: bold;
+
+  border: none;
+  border-radius: 0%;
+    
+  padding: 16px 16px 8px;
+    
+  clip-path: polygon(50% 0%, 100% 12px, 100% 100%, 0 100%, 0 12px);
+}
+
+#file-upload {
+  bottom: 1rem;
 }
 
